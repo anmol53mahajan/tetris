@@ -102,70 +102,7 @@ for (let i = 0; i < 25; i++) {
     displaySquares.push(square);
 }
 
-// Tetrominoes without rotations (just the first state) for display
-// We need to map them to a 5x5 grid (indices 0-24)
-// Centered offsets calculation for 5x5 grid:
-// Width is 5. Center is roughly index 12.
-const upNextTetrominoes = [
-    [6, 7, 8, 11],    // L: Row 2(coords 1,2,3) & Row 3(coord 1) -> Indices: 6,7,8 + 11 (6+5=11). Actually L shape is: [1, width+1, width*2+1, 2].
-    // Let's manually center them visually on a 5x5 grid.
-    // L:  . x . . .  (offset 1)
-    //     . x . . .  (offset 6)
-    //     . x x . .  (offset 11, 12)
-    // Let's try to put it in the middle 3 columns (1, 2, 3) and middle 3 rows (1, 2, 3).
-    // Better manual mapping:
-    // L (Orange):
-    // . . x . . (2)
-    // . . x . . (7)
-    // . . x x . (12, 13) -> [2, 7, 12, 13] NO, that's J.
-    // L is:
-    // . x . . .
-    // . x . . .
-    // . x x . .
-    // Actual L structure in our game:
-    // [1, width+1, width*2+1, 2] -> (x=1,y=0), (x=1,y=1), (x=1,y=2), (x=2,y=0) ??
-    // Wait, let's look at the original definition:
-    // [1, width + 1, width * 2 + 1, 2] -> (1,0), (1,1), (1,2), (2,0).
-    // Visually:
-    // . X X . . row 0 (1, 2)
-    // . X . . . row 1 (1)
-    // . X . . . row 2 (1)
-    // THIS IS "J" actually if 1 is x and width is y.
-    // Let's just pick pleasant looking centers for 5x5.
 
-    [7, 12, 17, 8],     // L: (2,1), (2,2), (2,3), (3,1) -> vertical line at col 2, hook at col 3.
-    // Let's stick to standard orientation:
-    //   x
-    //   x
-    //   x x
-    // Indices: 2, 7, 12, 13 (vertical line at col 2, foot at col 3)
-
-    [7, 8, 12, 13],     // Z:
-    // . x x . . (7,8)
-    // . . x x . (12,13) - No that's S-like offset.
-    // Z is:
-    // x x .
-    // . x x
-    // Indices: 6,7, 12,13 (Row 1: 1,2 | Row 2: 2,3) -> [6, 7, 12, 13]
-
-    [7, 11, 12, 13],    // T:
-    // . x . . . (7)
-    // x x x . . (11,12,13)
-
-    [7, 8, 12, 13],      // O:
-    // . x x . .
-    // . x x . .
-    // Indices: 7,8 12,13
-
-    [2, 7, 12, 17]      // I:
-    // . . x . .
-    // . . x . .
-    // . . x . .
-    // . . x . .
-    // Indices: 2, 7, 12, 17
-];
-
-// Re-map for 5x5 carefully:
 const upNextTetrominoes5x5 = [
     [2, 7, 12, 13],   // 0: L-Tetromino
     [6, 7, 12, 13],   // 1: Z-Tetromino
@@ -193,8 +130,9 @@ function displayShape() {
     });
 }
 
-// === GAME LOGIC ===
+// main game logic
 function draw() {
+
     current.forEach(index => {
         if (squares[currentPosition + index]) {
             squares[currentPosition + index].classList.add('tetromino');
@@ -213,7 +151,7 @@ function undraw() {
         }
     });
 }
-
+//moving the tetrominoes down
 function moveDown() {
     if (!isGameActive) return;
     undraw();
@@ -222,13 +160,21 @@ function moveDown() {
     freeze();
 }
 
+function checktaken(idx) {
+    return squares[currentPosition + idx + width].classList.contains('taken')
+}
+
+function checktakenattop(idx) {
+    return squares[currentPosition + idx].classList.contains('taken')
+}
+
 function freeze() {
-    if (current.some(index => squares[currentPosition + index + width].classList.contains('taken'))) {
+    if (current.some(checktaken)) {
         current.forEach(index => squares[currentPosition + index].classList.add('taken'));
 
-        // Start new piece
-        random = nextRandom; // Use the one we saw coming
-        nextRandom = Math.floor(Math.random() * theTetrominoes.length); // Pick new next
+        // starting  new piece
+        random = nextRandom; // Using the one in next block 
+        nextRandom = Math.floor(Math.random() * theTetrominoes.length); // Picking new block 
         current = theTetrominoes[random][0];
         currentPosition = 4;
         currentRotation = 0;
@@ -237,7 +183,7 @@ function freeze() {
         addScore();
 
         // Game Over Check
-        if (current.some(index => squares[currentPosition + index].classList.contains('taken'))) {
+        if (current.some(checktakenattop)) {
             scoreDisplay.textContent = 'END';
             clearInterval(timerId);
             isGameActive = false;
@@ -282,14 +228,15 @@ function moveRight() {
 function hardDrop() {
     if (!isGameActive || !timerId) return;
     undraw();
-    while (!current.some(index => squares[currentPosition + index + width].classList.contains('taken'))) {
+    while (!current.some(checktaken)) {
         currentPosition += width;
     }
     draw();
     freeze();
 }
 
-// === REFINED ROTATION FUNCTION ===
+//rotate function
+
 function rotate() {
     if (!isGameActive || !timerId) return;
     undraw();
@@ -297,21 +244,18 @@ function rotate() {
     const nextRotation = (currentRotation + 1) % current.length;
     const nextLayout = theTetrominoes[random][nextRotation];
 
-    // WALL KICK LOGIC
-    // We check positions: Normal, then +/- 1, then +/- 2 (for I-piece)
+    // main wall kick logic
 
     function isValidPosition(pos, layout) {
-        // 1. Check if any cell is taken
+        //  Check if any cell is taken
         if (layout.some(index => squares[pos + index] && squares[pos + index].classList.contains('taken'))) {
             return false;
         }
-        // 2. Check boundaries (Wrapping)
-        // Collect all column indices
-        const cols = layout.map(index => (pos + index) % width);
-        const rows = layout.map(index => Math.floor((pos + index) / width));
 
-        // Robust Wrap Check:
-        // A shape cannot span "low" columns (0, 1, 2) AND "high" columns (7, 8, 9) simultaneously.
+        // collect all column indices
+        const cols = layout.map(index => (pos + index) % width);
+
+        //wrap check
         const hasLeftEdge = cols.some(c => c < 3); // 0 or 1 or 2
         const hasRightEdge = cols.some(c => c > 6); // 7 or 8 or 9
 
@@ -337,13 +281,13 @@ function rotate() {
         currentRotation = nextRotation;
         current = nextLayout;
     }
-    // Kick 2 Left (Crucial for I-piece at Right Wall)
+    // Kick 2 Left as a glitch was there for I tetrimino at right wall
     else if (isValidPosition(currentPosition - 2, nextLayout)) {
         currentPosition -= 2;
         currentRotation = nextRotation;
         current = nextLayout;
     }
-    // Kick 2 Right (Crucial for I-piece at Left Wall)
+    // same for left wall
     else if (isValidPosition(currentPosition + 2, nextLayout)) {
         currentPosition += 2;
         currentRotation = nextRotation;
@@ -385,24 +329,24 @@ function addScore() {
     }
 }
 
-// === EVENT LISTENERS ===
+//main event listeners
 startBtn.addEventListener('click', () => {
     if (timerId) {
         clearInterval(timerId);
         timerId = null;
         startBtn.textContent = "Resume";
-        // Do NOT toggle isGameActive here, just pause the timer
+
     } else {
-        // First start or Resume
+        // first start or Resume
         startBtn.textContent = "Pause";
         if (!isGameActive && score === 0) {
-            // First Initial Load
-            if (squares.length === 0) createGrid(); // Ensure grid exists
+            // first initial load
+            if (squares.length === 0) createGrid(); // ensure grid exists
 
-            // Initial Seeds
+            // initial Seeds
             nextRandom = Math.floor(Math.random() * theTetrominoes.length);
             displayShape();
-            random = Math.floor(Math.random() * theTetrominoes.length); // Current
+            random = Math.floor(Math.random() * theTetrominoes.length);
             current = theTetrominoes[random][0];
 
             isGameActive = true;
@@ -419,7 +363,7 @@ restartBtn.addEventListener('click', () => {
     createGrid();
     isGameActive = true;
 
-    // Reset Logic
+    // reset Logic
     nextRandom = Math.floor(Math.random() * theTetrominoes.length);
     displayShape();
     random = Math.floor(Math.random() * theTetrominoes.length);
@@ -427,7 +371,7 @@ restartBtn.addEventListener('click', () => {
     currentPosition = 4;
     currentRotation = 0;
 
-    // Restart Timer
+    // restart Timer
     if (timerId) clearInterval(timerId);
     timerId = setInterval(moveDown, speed);
     startBtn.textContent = "Pause";
