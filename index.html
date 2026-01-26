@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Tetris | DOM Project</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Using a nice geometric font for the game feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="main-wrapper">
+        <div class="game-area">
+
+            <div class="grid"></div>
+
+            <div class="game-over-modal" id="game-over-modal">
+                <h2>GAME OVER</h2>
+                <p>Score: <span id="final-score">0</span></p>
+                <button id="restart-btn">Try Again</button>
+            </div>
+        </div>
+
+        <div class="stats-panel">
+            <h1 class="game-title">TETRIS</h1>
+
+            <div class="stat-box">
+                <h3>Score</h3>
+                <span id="score">0</span>
+            </div>
+
+            <div class="stat-box">
+                <h3>High Score</h3>
+                <span id="high-score">0</span>
+            </div>
+
+            <!-- Next Block Display -->
+            <div class="stat-box">
+                <h3>Next</h3>
+                <div class="mini-grid"></div>
+            </div>
+
+            <div class="controls-info">
+                <p>controls</p>
+                <div class="key-row"><span class="key">↑</span> Rotate</div>
+                <div class="key-row"><span class="key">←</span> <span class="key">→</span> Move</div>
+                <div class="key-row"><span class="key">↓</span> Soft Drop</div>
+                <div class="key-row"><span class="key">Space</span> Hard Drop</div>
+            </div>
+
+            <button id="start-button">Start Game</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
