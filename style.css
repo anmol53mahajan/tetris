@@ -213,3 +213,14 @@ body {
     background: white;
     color: black;
 }
+
+.footer-credit {
+    margin-top: auto;
+    padding-top: 20px;
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.4);
+    letter-spacing: 0.5px;
+}
