@@ -53,8 +53,8 @@ const lTetromino = [
     [1, width + 1, width * 2 + 1, width * 2],
     [width, width * 2, width * 2 + 1, width * 2 + 2]
 ];
-// Z-Tetromino
-const zTetromino = [
+// S-Tetromino
+const sTetromino = [
     [0, width, width + 1, width * 2 + 1],
     [width + 1, width + 2, width * 2, width * 2 + 1],
     [0, width, width + 1, width * 2 + 1],
@@ -81,7 +81,7 @@ const iTetromino = [
     [1, width + 1, width * 2 + 1, width * 3 + 1],
     [width, width + 1, width + 2, width + 3]
 ];
-const theTetrominoes = [lTetromino, zTetromino, tTetromino, oTetromino, iTetromino];
+const theTetrominoes = [lTetromino, sTetromino, tTetromino, oTetromino, iTetromino];
 
 // to store the state 
 let currentPosition = 4;
@@ -105,7 +105,7 @@ for (let i = 0; i < 25; i++) {
 
 const upNextTetrominoes5x5 = [
     [2, 7, 12, 13],   // 0: L-Tetromino
-    [6, 7, 12, 13],   // 1: Z-Tetromino
+    [7, 8, 11, 12],   // 1: S-Tetromino
     [7, 11, 12, 13],  // 2: T-Tetromino
     [6, 7, 11, 12],   // 3: O-Tetromino
     [2, 7, 12, 17]    // 4: I-Tetromino
