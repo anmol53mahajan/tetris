@@ -1,13 +1,11 @@
 # Neon Tetris - DOM-Based Web Application
 
 <div align="center">
-  <img src="neon-tetris.png" alt="Tetris Icon" width="96">
+  <img src="neon-tetris.png" alt="Neon Tetris Game Screenshot" width="500">
   
   ### 🎮 Game Demo
   
-  https://drive.google.com/drive/folders/1sZxnlz_SwZlBRqX-n7wfe03xRjEK5zju?usp=sharing
-  
-  *Watch the full gameplay video above!*
+  [Watch the Full Gameplay Video](https://drive.google.com/drive/folders/1sZxnlz_SwZlBRqX-n7wfe03xRjEK5zju?usp=sharing)
 </div>
 
 ---
