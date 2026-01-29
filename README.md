@@ -1,5 +1,17 @@
 # Neon Tetris - DOM-Based Web Application
 
+<div align="center">
+  <img src="neon-tetris.png" alt="Tetris Icon" width="96">
+  
+  ### 🎮 Game Demo
+  
+  https://drive.google.com/drive/folders/1sZxnlz_SwZlBRqX-n7wfe03xRjEK5zju?usp=sharing
+  
+  *Watch the full gameplay video above!*
+</div>
+
+---
+
 ## 📌 Project Overview
 Neon Tetris is a fully functional, browser-based recreation of the classic arcade game, built entirely from scratch using **HTML, CSS, and Vanilla JavaScript**. 
 
@@ -78,4 +90,4 @@ This project heavily utilizes the following API methods:
 *   **Refresh Rate**: The game loop is tied to the main thread; extremely heavy browser usage *could* theoretically cause minor stutters (though unlikely with DOM this optimized).
 
 ---
-*Submitted by [Your Name/Roll Number] for Web Dev II Final Project.*
+*Submitted by Anmol Mahajan for Web Dev II Final Project.*
